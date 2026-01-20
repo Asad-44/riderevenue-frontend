@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Monthly Summary</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body class="p-4">
+
+    <h2>📊 Monthly Summary</h2>
+
+    <div class="card p-3 mt-3">
+        <label>Select Month</label>
+        <input type="month" id="monthPicker" class="form-control w-50">
+        <button class="btn btn-success mt-3" onclick="loadSummary()">Load Summary</button>
+    </div>
+
+    <div class="card p-4 mt-4" id="summaryBox" style="display:none;">
+        <h4>Summary</h4>
+        <hr>
+        <p><b>Total Earnings:</b> <span id="earnings"></span></p>
+        <p><b>Total Fuel Cost:</b> <span id="fuel"></span></p>
+        <p><b>Total Maintenance Cost:</b> <span id="maint"></span></p>
+        <p><b>Total Driver Share:</b> <span id="dshare"></span></p>
+        <p><b>Total Owner Share:</b> <span id="oshare"></span></p>
+        <p><b>Net Profit:</b> <span id="profit"></span></p>
+        <p><b>Total Mileage:</b> <span id="mileage"></span> km</p>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("token");
+
+        function loadSummary() {
+            const value = document.getElementById("monthPicker").value;
+            if (!value) return alert("Please select a month");
+
+            const [year, month] = value.split("-");
+
+            fetch(`https://riderevenue-backend.onrender.com/api/summary?month=${month}&year=${year}`, {
+                headers: { "Authorization": "Bearer " + token }
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("summaryBox").style.display = "block";
+
+                document.getElementById("earnings").innerText = data.TotalEarnings || 0;
+                document.getElementById("fuel").innerText = data.TotalFuel || 0;
+                document.getElementById("maint").innerText = data.TotalMaintenance || 0;
+                document.getElementById("dshare").innerText = data.TotalDriverShare || 0;
+                document.getElementById("oshare").innerText = data.TotalOwnerShare || 0;
+                document.getElementById("profit").innerText = data.NetProfit || 0;
+                document.getElementById("mileage").innerText = data.TotalMileage || 0;
+            })
+            .catch(err => console.log(err));
+        }
+    </script>
+
+</body>
+</html>

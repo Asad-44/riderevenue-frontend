@@ -1,0 +1,543 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideRevenue Tracker - Fleet & Earnings Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced decorative elements */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(196, 168, 128, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -150px;
+            right: -150px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(168, 144, 115, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-40px) scale(1.08);
+                opacity: 0.8;
+            }
+        }
+
+        .landing-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 680px;
+            text-align: center;
+        }
+
+        .landing-card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 15px 50px rgba(139, 119, 94, 0.15);
+            padding: 56px 48px;
+            border: 1px solid rgba(139, 119, 94, 0.08);
+            animation: slideUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #c4a880 0%, #a89073 50%, #c4a880 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #c4a880 0%, #a89073 100%);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(164, 144, 115, 0.3);
+            animation: pulse 3s infinite ease-in-out;
+            position: relative;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #c4a880, #a89073);
+            opacity: 0;
+            filter: blur(10px);
+            animation: glow 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.3; }
+        }
+
+        .logo-icon i {
+            font-size: 48px;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 38px;
+            font-weight: 700;
+            color: #3d3530;
+            margin-bottom: 12px;
+            letter-spacing: -1.2px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #8b775e;
+            margin-bottom: 36px;
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Action buttons - Now positioned prominently */
+        .action-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .btn-main {
+            flex: 1;
+            max-width: 200px;
+            padding: 16px 32px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-main::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-main:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-main i {
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-main:hover i {
+            transform: translateX(3px);
+        }
+
+        .btn-main span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #c4a880 0%, #a89073 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 6px 16px rgba(164, 144, 115, 0.35);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(164, 144, 115, 0.45);
+            color: white;
+        }
+
+        .btn-outline-custom {
+            background: white;
+            color: #a89073;
+            border: 2px solid #c4a880;
+        }
+
+        .btn-outline-custom:hover {
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+            border-color: #a89073;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(164, 144, 115, 0.2);
+            color: #8b775e;
+        }
+
+        /* Features grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .feature {
+            padding: 20px 16px;
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+            border-radius: 16px;
+            border: 1.5px solid #e8dcc8;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(196, 168, 128, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(139, 119, 94, 0.12);
+            border-color: #c4a880;
+        }
+
+        .feature:hover::before {
+            opacity: 1;
+        }
+
+        .feature i {
+            font-size: 28px;
+            color: #c4a880;
+            margin-bottom: 12px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover i {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #3d3530;
+            margin-bottom: 6px;
+        }
+
+        .feature p {
+            font-size: 12px;
+            color: #8b775e;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Stats section */
+        .stats-section {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            padding: 20px;
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+            border-radius: 16px;
+            border: 1px solid #e8dcc8;
+        }
+
+        .stat {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat::after {
+            content: '';
+            position: absolute;
+            right: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 40px;
+            background: #e8dcc8;
+        }
+
+        .stat:last-child::after {
+            display: none;
+        }
+
+        .stat-number {
+            font-size: 26px;
+            font-weight: 700;
+            color: #c4a880;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #8b775e;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-text {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #a89073;
+            line-height: 1.6;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .landing-card {
+                padding: 48px 36px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 15px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stats-section {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .stat::after {
+                display: none;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn-main {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .landing-card {
+                padding: 40px 28px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .logo-icon {
+                width: 85px;
+                height: 85px;
+            }
+
+            .logo-icon i {
+                font-size: 40px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+                margin-bottom: 28px;
+            }
+
+            .feature {
+                padding: 18px 14px;
+            }
+
+            .feature i {
+                font-size: 24px;
+            }
+        }
+
+        /* Smooth animations on load */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .feature {
+            animation: fadeInScale 0.5s ease-out backwards;
+        }
+
+        .feature:nth-child(1) { animation-delay: 0.1s; }
+        .feature:nth-child(2) { animation-delay: 0.2s; }
+        .feature:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <div class="landing-card">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h1>RideRevenue Tracker</h1>
+                <p class="subtitle">Professional fleet & earnings management system for modern ride-sharing businesses</p>
+            </div>
+
+            <!-- Action buttons prominently placed -->
+            <div class="action-buttons">
+                <a class="btn-main btn-primary-custom" href="register.html">
+                    <span>Get Started</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a class="btn-main btn-outline-custom" href="login.html">
+                    <span>Sign In</span>
+                    <i class="fas fa-sign-in-alt"></i>
+                </a>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-users"></i>
+                    <h3>Driver Management</h3>
+                    <p>Efficiently manage and track driver performance</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-car-side"></i>
+                    <h3>Fleet Tracking</h3>
+                    <p>Monitor all vehicles and mileage in real-time</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Revenue Analytics</h3>
+                    <p>Comprehensive earnings and profit reports</p>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Accurate</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Available</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">Easy</div>
+                    <div class="stat-label">To Use</div>
+                </div>
+            </div>
+
+            <p class="footer-text">
+                Streamline your ride-sharing business operations with powerful tools
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Check if already logged in and redirect to dashboard
+        if (localStorage.token) {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1505 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RideRevenue Tracker</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #c4a880;
+            --primary-dark: #a89073;
+            --secondary: #8b775e;
+            --dark: #3d3530;
+            --light-bg: #f5f0e8;
+            --white: #ffffff;
+            --border: #e8dcc8;
+            --shadow-sm: 0 2px 8px rgba(139, 119, 94, 0.08);
+            --shadow-md: 0 8px 24px rgba(139, 119, 94, 0.12);
+            --shadow-hover: 0 15px 30px rgba(139, 119, 94, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark) !important;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar-brand i {
+            color: var(--primary);
+            background: rgba(196, 168, 128, 0.15);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: var(--dark);
+            color: var(--white);
+            border-color: var(--dark);
+        }
+
+
+        /* Dashboard Container */
+        .dashboard-container {
+            padding: 40px 0;
+            flex: 1;
+        }
+
+        .welcome-header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .welcome-header h3 {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+
+        .welcome-header p {
+            color: var(--secondary);
+            margin: 0;
+            font-size: 16px;
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-left: 4px;
+        }
+
+        /* Action Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .dash-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dash-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .dash-card .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .dash-card h5 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .dash-card span.desc {
+            font-size: 13px;
+            color: #998a7b;
+            font-weight: 400;
+        }
+
+        /* Card Color Variants */
+        .dash-card.primary .icon-box {
+            background: rgba(196, 168, 128, 0.1);
+            color: var(--primary);
+        }
+
+        .dash-card.success .icon-box {
+            background: rgba(102, 187, 106, 0.1);
+            color: #66bb6a;
+        }
+
+        .dash-card.info .icon-box {
+            background: rgba(66, 165, 245, 0.1);
+            color: #42a5f5;
+        }
+
+        .dash-card.warning .icon-box {
+            background: rgba(255, 167, 38, 0.1);
+            color: #ffa726;
+        }
+
+        .dash-card.secondary .icon-box {
+            background: rgba(139, 119, 94, 0.1);
+            color: var(--secondary);
+        }
+
+        .dash-card:hover .icon-box {
+            transform: scale(1.1);
+        }
+
+        /* Modal Styling */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 24px 32px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 32px;
+            background: #fff;
+            /* kept white for cleanliness */
+            border-radius: 0 0 20px 20px;
+        }
+
+        /* Forms */
+        .form-label {
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .form-control,
+        .form-select {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 15px;
+            background: #fcfbf9;
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(196, 168, 128, 0.15);
+        }
+
+        /* Buttons */
+
+        /* Add/Update these classes in your <style> tag */
+
+        .btn-warning {
+            background: #ffa726;
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            background: #fb8c00;
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-danger {
+            background: #ef5350;
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #e53935;
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .btn-primary {
+            background: var(--dark);
+            border: none;
+            border-radius: 10px;
+            padding: 14px 24px;
+            font-weight: 600;
+            font-size: 15px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #231f1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(61, 53, 48, 0.2);
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 12px;
+            border: none;
+            font-size: 14px;
+            padding: 16px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Tables */
+        .table-responsive {
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead {
+            background: #faf8f5;
+        }
+
+        .table th {
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table td {
+            padding: 16px;
+            vertical-align: middle;
+            color: var(--dark);
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .table-active {
+            background: #faf8f5 !important;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Add this to your style section */
+        #dailyLogModal {
+            z-index: 1060 !important;
+            /* Standard Bootstrap modal is 1055 */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand">
+                <i class="fas fa-car-alt"></i>
+                RideRevenue
+            </a>
+            <div>
+                <button id="logout" class="btn btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container dashboard-container">
+        <!-- Welcome Header -->
+        <div class="welcome-header">
+            <div>
+                <h3>Dashboard</h3>
+                <p>Welcome back. Here is your fleet overview.</p>
+            </div>
+            <div class="text-end d-none d-md-block">
+                <small class="text-muted" id="currentDateDisplay"></small>
+            </div>
+        </div>
+
+        <!-- Static Quick Stats (Optional Visual Enhancement) -->
+        <div class="row mb-5 g-3">
+            <div class="col-md-12">
+                <div class="p-4 rounded-4"
+                    style="background: linear-gradient(135deg, #3d3530 0%, #5d4e42 100%); color: white;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 style="color: #c4a880; margin-bottom: 5px;">Quick Action</h5>
+                            <p class="mb-0 text-white-50" style="font-size: 14px;">Log today's shifts to keep your
+                                revenue data current.</p>
+                        </div>
+                        <button class="btn btn-light" style="color: #3d3530; font-weight: 600;" data-bs-toggle="modal"
+                            data-bs-target="#dailyLogModal">
+                            <i class="fas fa-plus me-2"></i> Log Entry
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group 1: Management -->
+        <div class="section-title">Fleet Management</div>
+        <div class="card-grid">
+            <a href="drivers.html" class="dash-card primary">
+                <div class="icon-box"><i class="fas fa-users"></i></div>
+                <h5>Drivers</h5>
+                <span class="desc">Manage driver profiles</span>
+            </a>
+            <a href="vehicles.html" class="dash-card primary">
+                <div class="icon-box"><i class="fas fa-car-side"></i></div>
+                <h5>Vehicles</h5>
+                <span class="desc">Manage fleet inventory</span>
+            </a>
+        </div>
+
+        <!-- Group 2: Operations & Logs -->
+        <div class="section-title">Operations</div>
+        <div class="card-grid">
+            <button class="dash-card success w-100 text-start" data-bs-toggle="modal" data-bs-target="#dailyLogModal">
+                <div class="icon-box"><i class="fas fa-plus-circle"></i></div>
+                <h5>Add Daily Log</h5>
+                <span class="desc">Input shift & mileage</span>
+            </button>
+            <button class="dash-card info w-100 text-start" data-bs-toggle="modal" data-bs-target="#dailyReportModal">
+                <div class="icon-box"><i class="fas fa-file-invoice"></i></div>
+                <h5>Daily Report</h5>
+                <span class="desc">View today's summary</span>
+            </button>
+        </div>
+
+        <!-- Group 3: Analytics -->
+        <div class="section-title">Analytics & Reports</div>
+        <div class="card-grid">
+            <button class="dash-card secondary w-100 text-start" data-bs-toggle="modal"
+                data-bs-target="#monthlySummaryModal">
+                <div class="icon-box"><i class="fas fa-calendar-alt"></i></div>
+                <h5>Monthly Summary</h5>
+                <span class="desc">Revenue overview</span>
+            </button>
+            <button class="dash-card warning w-100 text-start" data-bs-toggle="modal"
+                data-bs-target="#customReportModal">
+                <div class="icon-box"><i class="fas fa-chart-area"></i></div>
+                <h5>Custom Report</h5>
+                <span class="desc">Date range analysis</span>
+            </button>
+            <button class="dash-card info w-100 text-start" data-bs-toggle="modal"
+                data-bs-target="#driverPerformanceModal">
+                <div class="icon-box"><i class="fas fa-chart-line"></i></div>
+                <h5>Driver Stats</h5>
+                <span class="desc">Individual performance</span>
+            </button>
+            <button class="dash-card primary w-100 text-start" data-bs-toggle="modal"
+                data-bs-target="#vehiclePerformanceModal">
+                <div class="icon-box"><i class="fas fa-tachometer-alt"></i></div>
+                <h5>Vehicle Stats</h5>
+                <span class="desc">Maintenance & efficiency</span>
+            </button>
+        </div>
+
+        <div id="info"></div>
+    </div>
+
+    <!-- Daily Log & Shift Modal -->
+    <div class="modal fade" id="dailyLogModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Daily Log</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="dailyLogForm">
+                        <h6 class="text-uppercase text-muted fw-bold mb-3"
+                            style="font-size: 11px; letter-spacing: 1px;">Assignment Details</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Driver</label>
+                                <select name="driverId" class="form-select" required>
+                                    <option value="">Select Driver</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Vehicle</label>
+                                <select name="vehicleId" class="form-select" required>
+                                    <option value="">Select Vehicle</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" name="date" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Shift</label>
+                                <select name="shiftType" class="form-select" required>
+                                    <option value="">Select Shift</option>
+                                    <option value="Morning">Morning</option>
+                                    <option value="Evening">Evening</option>
+                                    <option value="Night">Night</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h6 class="text-uppercase text-muted fw-bold mb-3"
+                            style="font-size: 11px; letter-spacing: 1px;">Metrics</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Start Odometer (km)</label>
+                                <input type="number" name="startReading" class="form-control" placeholder="0.0"
+                                    step="0.1" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">End Odometer (km)</label>
+                                <input type="number" name="endReading" class="form-control" placeholder="0.0" step="0.1"
+                                    required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Total Distance</label>
+                                <input type="number" name="totalMileage" class="form-control bg-light" placeholder="0.0"
+                                    step="0.1" readonly>
+                            </div>
+                        </div>
+
+                        <h6 class="text-uppercase text-muted fw-bold mb-3"
+                            style="font-size: 11px; letter-spacing: 1px;">Financials</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Total Earnings ($)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">$</span>
+                                    <input type="number" name="totalEarnings" class="form-control border-start-0 ps-0"
+                                        step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fuel Cost ($)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0">$</span>
+                                    <input type="number" name="fuelCost" class="form-control border-start-0 ps-0"
+                                        step="0.01">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-3">
+                            <i class="fas fa-save me-2"></i> Save Daily Log
+                        </button>
+                    </form>
+                    <div id="msgDiv" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Report Modal -->
+    <div class="modal fade" id="dailyReportModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Daily Report</h5>
+                    <div class="text-muted ms-auto" style="font-size: 14px;" id="reportDate"></div>
+                    <button type="button" class="btn-close ms-2" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="dailyReportContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customized Report Modal -->
+    <div class="modal fade" id="customReportModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Customized Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 align-items-end mb-4">
+                        <div class="col-md-5">
+                            <label class="form-label">From Date</label>
+                            <input type="date" id="customFromDate" class="form-control" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">To Date</label>
+                            <input type="date" id="customToDate" class="form-control" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" onclick="loadCustomReport()">Go</button>
+                        </div>
+                    </div>
+                    <div id="customReportContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Summary Modal -->
+    <div class="modal fade" id="monthlySummaryModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Monthly Summary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 align-items-end mb-4">
+                        <div class="col-md-9">
+                            <label class="form-label">Select Month</label>
+                            <input type="month" id="summaryMonth" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary w-100" onclick="loadMonthlySummary()">View</button>
+                        </div>
+                    </div>
+                    <div id="monthlySummaryContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Driver Performance Modal -->
+    <div class="modal fade" id="driverPerformanceModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Driver Performance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 align-items-end mb-4 p-3 bg-light rounded-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Driver</label>
+                            <select id="performanceDriverId" class="form-select">
+                                <option value="">Choose Driver</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">From</label>
+                            <input type="date" id="driverPerfFrom" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">To</label>
+                            <input type="date" id="driverPerfTo" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" onclick="loadDriverPerformance()">
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                    <div id="driverPerformanceContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vehicle Performance Modal -->
+    <div class="modal fade" id="vehiclePerformanceModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Vehicle Performance</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 align-items-end mb-4 p-3 bg-light rounded-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Vehicle</label>
+                            <select id="performanceVehicleId" class="form-select">
+                                <option value="">Choose Vehicle</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">From</label>
+                            <input type="date" id="vehiclePerfFrom" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">To</label>
+                            <input type="date" id="vehiclePerfTo" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" onclick="loadVehiclePerformance()">
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                    <div id="vehiclePerformanceContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set current date in header
+        document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        // Existing Logic
+        if (!localStorage.token) location = 'login.html';
+
+        const api = 'https://riderevenue-backend.onrender.com/api';
+        const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.token };
+
+        let driversData = [];
+        let vehiclesData = [];
+
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            location = 'login.html';
+        });
+
+        // Helper function to format dates
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Load drivers and vehicles
+        async function loadDropdowns() {
+            try {
+                const driversRes = await fetch(api + '/drivers', { headers });
+                if (!driversRes.ok) throw new Error('Failed to load drivers');
+
+                driversData = await driversRes.json();
+
+                // Populate Main Form Dropdown
+                const driverSelect = document.querySelector('select[name="driverId"]');
+                driversData.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d.DriverID;
+                    opt.textContent = d.Name;
+                    driverSelect.appendChild(opt);
+                });
+
+                const vehiclesRes = await fetch(api + '/vehicles', { headers });
+                if (!vehiclesRes.ok) throw new Error('Failed to load vehicles');
+
+                vehiclesData = await vehiclesRes.json();
+
+                // Load Performance Modal Dropdowns immediately
+                loadPerformanceDropdowns(driversData, vehiclesData);
+
+            } catch (err) {
+                console.error('Error loading dropdowns:', err);
+                document.getElementById('info').innerHTML =
+                    '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> Error loading data. Please refresh the page.</div>';
+            }
+        }
+
+        // Update vehicle dropdown when driver is selected
+        document.querySelector('select[name="driverId"]').addEventListener('change', (e) => {
+            const driverId = e.target.value;
+            const vehicleSelect = document.querySelector('select[name="vehicleId"]');
+            vehicleSelect.innerHTML = '<option value="">Select Vehicle</option>';
+
+            if (driverId) {
+                const driverVehicles = vehiclesData.filter(v =>
+                    parseInt(v.DriverID) === parseInt(driverId) || !v.DriverID || v.DriverID === 'null'
+                );
+                driverVehicles.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.VehicleID;
+                    opt.textContent = v.NumberPlate + ' (' + (v.Model || 'Unknown') + ')';
+                    vehicleSelect.appendChild(opt);
+                });
+            }
+        });
+
+        // Auto-calculate total mileage with validation
+        document.querySelector('input[name="startReading"]').addEventListener('input', calculateMileage);
+        document.querySelector('input[name="endReading"]').addEventListener('input', calculateMileage);
+
+        function calculateMileage() {
+            const startReading = parseFloat(document.querySelector('input[name="startReading"]').value) || 0;
+            const endReading = parseFloat(document.querySelector('input[name="endReading"]').value) || 0;
+            const totalMileage = endReading - startReading;
+
+            const endReadingInput = document.querySelector('input[name="endReading"]');
+
+            if (endReading > 0 && totalMileage < 0) {
+                endReadingInput.setCustomValidity('Ending reading must be greater than starting reading');
+                document.querySelector('input[name="totalMileage"]').value = '';
+            } else {
+                endReadingInput.setCustomValidity('');
+                document.querySelector('input[name="totalMileage"]').value = totalMileage > 0 ? totalMileage.toFixed(2) : '';
+            }
+        }
+
+        // Handle daily log form submission
+        document.getElementById('dailyLogForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const f = e.target;
+            const msgDiv = document.getElementById('msgDiv');
+
+            const totalMileage = parseFloat(f.totalMileage.value);
+
+            if (totalMileage <= 0) {
+                msgDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> Total mileage must be greater than 0</div>';
+                return;
+            }
+
+            msgDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Processing...</div>';
+
+            try {
+                // Create shift first
+                const shiftRes = await fetch(api + '/shifts', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        driverId: parseInt(f.driverId.value),
+                        vehicleId: parseInt(f.vehicleId.value),
+                        date: f.date.value,
+                        shiftType: f.shiftType.value
+                    })
+                });
+
+                const shiftJson = await shiftRes.json();
+                if (!shiftRes.ok) throw new Error(shiftJson.message || 'Shift creation failed');
+
+                // Then create mileage
+                const mileageRes = await fetch(api + '/mileage', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        vehicleId: parseInt(f.vehicleId.value),
+                        driverId: parseInt(f.driverId.value),
+                        date: f.date.value,
+                        startReading: parseFloat(f.startReading.value),
+                        endReading: parseFloat(f.endReading.value)
+                    })
+                });
+
+                const mileageJson = await mileageRes.json();
+                if (!mileageRes.ok) throw new Error(mileageJson.message || 'Mileage creation failed');
+
+                // Finally create earnings
+                const earningsRes = await fetch(api + '/earnings', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        driverId: parseInt(f.driverId.value),
+                        vehicleId: parseInt(f.vehicleId.value),
+                        date: f.date.value,
+                        totalEarnings: parseFloat(f.totalEarnings.value),
+                        fuelCost: f.fuelCost.value ? parseFloat(f.fuelCost.value) : 0,
+                        maintenanceCost: 0
+                    })
+                });
+
+                const earningsJson = await earningsRes.json();
+                if (!earningsRes.ok) throw new Error(earningsJson.message || 'Earnings creation failed');
+
+                msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> Daily log saved successfully!</div>';
+                f.reset();
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('dailyLogModal'));
+                    modal.hide();
+                    msgDiv.innerHTML = '';
+                }, 1500);
+            } catch (err) {
+                msgDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Error: ' + err.message + '</div>';
+                console.error('Error:', err);
+            }
+        });
+
+        // Reset form when modal is closed
+        document.getElementById('dailyLogModal').addEventListener('hidden.bs.modal', () => {
+            document.getElementById('dailyLogForm').reset();
+            document.getElementById('msgDiv').innerHTML = '';
+        });
+
+        // Load Daily Report
+        document.getElementById('dailyReportModal').addEventListener('show.bs.modal', async () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reportDate').textContent = formatDate(today);
+
+            const content = document.getElementById('dailyReportContent');
+            content.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+
+            try {
+                const mileageRes = await fetch(api + '/mileage?date=' + today, { headers });
+                const earningsRes = await fetch(api + '/earnings?date=' + today, { headers });
+
+                const mileageData = await mileageRes.json();
+                const earningsData = await earningsRes.json();
+
+                let html = '';
+
+                html += '<h6 class="mb-3"><i class="fas fa-road text-warning me-2"></i> Mileage Log</h6>';
+                if (Array.isArray(mileageData) && mileageData.length > 0) {
+                    html += '<div class="table-responsive mb-4"><table class="table table-sm"><thead><tr><th>Driver</th><th>Vehicle</th><th>Start (km)</th><th>End (km)</th><th>Total (km)</th></tr></thead><tbody>';
+                    mileageData.forEach(m => {
+                        html += '<tr><td>' + m.DriverName + '</td><td>' + m.NumberPlate + '</td><td>' + m.StartReading + '</td><td>' + m.EndReading + '</td><td>' + (m.EndReading - m.StartReading).toFixed(2) + '</td></tr>';
+                    });
+                    html += '</tbody></table></div>';
+                } else {
+                    html += '<p class="text-muted mb-4 small">No mileage records for today</p>';
+                }
+
+                html += '<h6 class="mb-3"><i class="fas fa-dollar-sign text-success me-2"></i> Earnings Log</h6>';
+                if (Array.isArray(earningsData) && earningsData.length > 0) {
+                    html += '<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Driver</th><th>Vehicle</th><th>Earnings</th><th>Fuel</th><th>Driver Share</th><th>Owner Share</th><th>Net Profit</th></tr></thead><tbody>';
+                    let totalEarnings = 0, totalFuel = 0, totalDriverShare = 0, totalOwnerShare = 0, totalNetProfit = 0;
+                    earningsData.forEach(e => {
+                        html += '<tr><td>' + e.DriverName + '</td><td>' + e.NumberPlate + '</td><td>$' + parseFloat(e.TotalEarnings).toFixed(2) + '</td><td>$' + parseFloat(e.FuelCost).toFixed(2) + '</td><td>$' + parseFloat(e.DriverShare).toFixed(2) + '</td><td>$' + parseFloat(e.OwnerShare).toFixed(2) + '</td><td>$' + parseFloat(e.NetProfit).toFixed(2) + '</td></tr>';
+                        totalEarnings += parseFloat(e.TotalEarnings);
+                        totalFuel += parseFloat(e.FuelCost);
+                        totalDriverShare += parseFloat(e.DriverShare);
+                        totalOwnerShare += parseFloat(e.OwnerShare);
+                        totalNetProfit += parseFloat(e.NetProfit);
+                    });
+                    html += '<tr class="table-active"><td colspan="2"><strong>TOTAL</strong></td><td><strong>$' + totalEarnings.toFixed(2) + '</strong></td><td><strong>$' + totalFuel.toFixed(2) + '</strong></td><td><strong>$' + totalDriverShare.toFixed(2) + '</strong></td><td><strong>$' + totalOwnerShare.toFixed(2) + '</strong></td><td><strong>$' + totalNetProfit.toFixed(2) + '</strong></td></tr>';
+                    html += '</tbody></table></div>';
+                } else {
+                    html += '<p class="text-muted small">No earnings records for today</p>';
+                }
+
+                content.innerHTML = html;
+            } catch (err) {
+                content.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Error loading report: ' + err.message + '</div>';
+            }
+        });
+
+        // Load Customized Report
+        // Load Customized Report
+        async function loadCustomReport() {
+            const fromDate = document.getElementById('customFromDate').value;
+            const toDate = document.getElementById('customToDate').value;
+
+            if (!fromDate || !toDate) { alert('Select dates'); return; }
+
+            const content = document.getElementById('customReportContent');
+            content.innerHTML = '<p class="text-center text-muted"><i class="fas fa-spinner fa-spin"></i> Loading Data...</p>';
+
+            try {
+                const res = await fetch(`${api}/dailylogs/combined?from=${fromDate}&to=${toDate}`, { headers });
+                const data = await res.json();
+
+                if (data.length === 0) {
+                    content.innerHTML = '<div class="alert alert-warning">No records found for this period.</div>';
+                    return;
+                }
+
+                let html = '<div class="table-responsive"><table class="table table-hover align-middle">';
+                html += '<thead class="table-light"><tr><th>Date</th><th>Driver</th><th>Vehicle</th><th>Mileage</th><th>Earnings</th><th>Fuel</th><th>Profit</th><th>Actions</th></tr></thead><tbody>';
+
+                data.forEach(row => {
+                    const rowData = JSON.stringify(row).replace(/"/g, '&quot;');
+
+                    // SAFE VALUES: Use (val || 0) to prevent crashing if value is null
+                    const mileage = (row.Mileage || 0).toFixed(1);
+                    const earnings = (row.TotalEarnings || 0).toFixed(2);
+                    const fuel = (row.FuelCost || 0).toFixed(2);
+                    const profit = (row.NetProfit || 0).toFixed(2);
+
+                    html += `<tr>
+                <td>${formatDate(row.Date)}</td>
+                <td>${row.DriverName || 'Unknown'}</td>
+                <td>${row.NumberPlate || 'Unknown'}</td>
+                <td>${mileage} km</td>
+                <td>$${earnings}</td>
+                <td>$${fuel}</td>
+                <td class="fw-bold text-success">$${profit}</td>
+                <td style="min-width: 170px;"> 
+                    <button class="btn btn-sm btn-warning me-2" onclick="openEditModal(${rowData})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteLogEntry('${row.Date}', ${row.DriverID}, ${row.VehicleID})">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
+            </tr>`;
+                });
+                html += '</tbody></table></div>';
+                content.innerHTML = html;
+
+            } catch (err) {
+                console.error(err);
+                content.innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
+            }
+        }
+
+        async function deleteLogEntry(dateString, driverId, vehicleId) {
+            if (!confirm('Are you sure? This will delete Mileage, Earnings, and Shift data for this entry.')) return;
+
+            // Fix date format string (remove Time part if exists from SQL)
+            const dateOnly = dateString.split('T')[0];
+
+            try {
+                const res = await fetch(`${api}/dailylogs`, {
+                    method: 'DELETE',
+                    headers: headers,
+                    body: JSON.stringify({ date: dateOnly, driverId, vehicleId })
+                });
+
+                const json = await res.json();
+                if (res.ok) {
+                    alert('Deleted successfully');
+                    loadCustomReport(); // Refresh table
+                } else {
+                    alert('Failed: ' + json.message);
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+
+        let isEditing = false; // Flag to track mode
+
+        function openEditModal(data) {
+            isEditing = true;
+
+            // 1. Open Modal
+            const modal = new bootstrap.Modal(document.getElementById('dailyLogModal'));
+            modal.show();
+
+            // 2. Fill Fields
+            const f = document.getElementById('dailyLogForm');
+
+            // We need to wait for dropdowns to load, but assuming they are loaded:
+            f.driverId.value = data.DriverID;
+            // Trigger change to load vehicles (optional, but good practice if dynamic)
+            f.vehicleId.innerHTML = `<option value="${data.VehicleID}" selected>${data.NumberPlate}</option>`;
+
+            f.date.value = data.Date.split('T')[0];
+            f.startReading.value = data.StartReading;
+            f.endReading.value = data.EndReading;
+            f.totalMileage.value = data.Mileage;
+            f.totalEarnings.value = data.TotalEarnings;
+            f.fuelCost.value = data.FuelCost;
+            f.shiftType.value = "Morning"; // Default, as we didn't join ShiftType string, or logic to deduce it
+
+            // 3. Change Modal Title/Button
+            document.querySelector('#dailyLogModal .modal-title').textContent = "Edit Log Entry";
+
+            // Disable primary keys so they can't change the log identity
+            f.driverId.style.pointerEvents = "none";
+            f.vehicleId.style.pointerEvents = "none";
+            f.date.readOnly = true;
+        }
+
+        // 4. Update the Submit Listener to handle Edit Mode
+        document.getElementById('dailyLogForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const f = e.target;
+
+            // ... (Your existing validation code for start/end reading) ...
+            const start = parseFloat(f.startReading.value);
+            const end = parseFloat(f.endReading.value);
+
+            const payload = {
+                driverId: parseInt(f.driverId.value),
+                vehicleId: parseInt(f.vehicleId.value),
+                date: f.date.value,
+                startReading: start,
+                endReading: end,
+                totalEarnings: parseFloat(f.totalEarnings.value),
+                fuelCost: parseFloat(f.fuelCost.value) || 0,
+                shiftType: f.shiftType.value
+            };
+
+            // DETERMINE METHOD
+            const method = isEditing ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(api + '/dailylogs', {
+                    method: method,
+                    headers: headers,
+                    body: JSON.stringify(payload)
+                });
+
+                const json = await response.json();
+                if (!response.ok) throw new Error(json.message);
+
+                // Success Feedback
+                document.getElementById('msgDiv').innerHTML = `<div class="alert alert-success">Entry ${isEditing ? 'Updated' : 'Saved'}!</div>`;
+
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('dailyLogModal')).hide();
+                    f.reset();
+                    // Reset UI states
+                    isEditing = false;
+                    document.querySelector('#dailyLogModal .modal-title').textContent = "New Daily Log";
+                    f.driverId.style.pointerEvents = "auto";
+                    f.vehicleId.style.pointerEvents = "auto";
+                    f.date.readOnly = false;
+
+                    // If we were on the report page, refresh it
+                    if (document.getElementById('customReportModal').classList.contains('show')) {
+                        loadCustomReport();
+                    }
+                }, 1000);
+
+            } catch (err) {
+                document.getElementById('msgDiv').innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+            }
+        });
+
+        // Also reset editing flag when modal closes manually
+        document.getElementById('dailyLogModal').addEventListener('hidden.bs.modal', () => {
+            isEditing = false;
+            document.querySelector('#dailyLogModal .modal-title').textContent = "New Daily Log";
+            const f = document.getElementById('dailyLogForm');
+            f.reset();
+            f.driverId.style.pointerEvents = "auto";
+            f.vehicleId.style.pointerEvents = "auto";
+            f.date.readOnly = false;
+        });
+
+        // Monthly Summary
+        async function loadMonthlySummary() {
+            const month = document.getElementById('summaryMonth').value;
+
+            if (!month) {
+                alert("Please select a month");
+                return;
+            }
+
+            const [year, mon] = month.split("-");
+            const fromDate = `${year}-${mon}-01`;
+            const lastDay = new Date(year, mon, 0).getDate();
+            const toDate = `${year}-${mon}-${String(lastDay).padStart(2, '0')}`;
+
+            const content = document.getElementById('monthlySummaryContent');
+            content.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+
+            try {
+                const earningsRes = await fetch(api + `/earnings/range?from=${fromDate}&to=${toDate}`, { headers });
+                const mileageRes = await fetch(api + `/mileage?from=${fromDate}&to=${toDate}`, { headers });
+
+                const earnings = await earningsRes.json();
+                const mileage = await mileageRes.json();
+
+                let totalMileage = 0;
+                let totalEarnings = 0;
+                let totalFuel = 0;
+                let totalDriverShare = 0;
+                let totalOwnerShare = 0;
+                let totalNetProfit = 0;
+
+                if (Array.isArray(mileage)) {
+                    mileage.forEach(m => totalMileage += (m.EndReading - m.StartReading));
+                }
+                if (Array.isArray(earnings)) {
+                    earnings.forEach(e => {
+                        totalEarnings += parseFloat(e.TotalEarnings);
+                        totalFuel += parseFloat(e.FuelCost);
+                        totalDriverShare += parseFloat(e.DriverShare);
+                        totalOwnerShare += parseFloat(e.OwnerShare);
+                        totalNetProfit += parseFloat(e.NetProfit);
+                    });
+                }
+
+                const monthName = new Date(year, mon - 1).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+
+                content.innerHTML = `
+                    <h5 class="mb-4 text-center">${monthName} Summary</h5>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr><th style="width: 50%;">Total Mileage</th><td><strong>${totalMileage.toFixed(2)} km</strong></td></tr>
+                            <tr><th>Total Earnings</th><td><strong>$${totalEarnings.toFixed(2)}</strong></td></tr>
+                            <tr><th>Total Fuel Cost</th><td><strong>$${totalFuel.toFixed(2)}</strong></td></tr>
+                            <tr><th>Total Driver Share</th><td><strong>$${totalDriverShare.toFixed(2)}</strong></td></tr>
+                            <tr><th>Total Owner Share</th><td><strong>$${totalOwnerShare.toFixed(2)}</strong></td></tr>
+                            <tr class="table-active"><th>Net Profit</th><td><strong style="color: #66bb6a; font-size: 18px;">$${totalNetProfit.toFixed(2)}</strong></td></tr>
+                        </table>
+                    </div>
+                `;
+
+            } catch (err) {
+                content.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Error: ${err.message}</div>`;
+            }
+        }
+
+        // Populate the specific dropdowns for the Performance modals
+        function loadPerformanceDropdowns(drivers, vehicles) {
+            // Drivers for Performance Modal
+            const perfDriverSelect = document.getElementById('performanceDriverId');
+            drivers.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.DriverID;
+                opt.textContent = d.Name;
+                perfDriverSelect.appendChild(opt);
+            });
+
+            // Vehicles for Performance Modal
+            const perfVehicleSelect = document.getElementById('performanceVehicleId');
+            vehicles.forEach(v => {
+                const opt = document.createElement('option');
+                opt.value = v.VehicleID;
+                opt.textContent = `${v.NumberPlate} ${v.Model ? '(' + v.Model + ')' : ''}`;
+                perfVehicleSelect.appendChild(opt);
+            });
+        }
+
+        // Driver Performance Report
+        async function loadDriverPerformance() {
+            const driverId = document.getElementById('performanceDriverId').value;
+            const fromDate = document.getElementById('driverPerfFrom').value;
+            const toDate = document.getElementById('driverPerfTo').value;
+
+            if (!driverId || !fromDate || !toDate) {
+                alert('Please select driver and date range');
+                return;
+            }
+
+            if (new Date(fromDate) > new Date(toDate)) {
+                alert('From date must be before to date');
+                return;
+            }
+
+            const content = document.getElementById('driverPerformanceContent');
+            content.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+
+            try {
+                const res = await fetch(api + `/reports/driver-performance?driverId=${driverId}&from=${fromDate}&to=${toDate}`, { headers });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    content.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> ${data.message || 'Error loading report'}</div>`;
+                    return;
+                }
+
+                const stats = data.overallStats || {};
+                const driver = data.driver || {};
+                let html = '';
+
+                // Driver Info Header
+                html += `<div style="background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%); padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #e8dcc8;">
+                    <h5 style="color: #3d3530; margin-bottom: 10px;"><i class="fas fa-user-circle me-2"></i> ${driver.Name || 'Unknown'}</h5>
+                    <p style="color: #8b775e; margin: 0; font-size: 14px;">Email: ${driver.Email || 'N/A'} | Phone: ${driver.Phone || 'N/A'}</p>
+                    <p style="color: #8b775e; margin: 4px 0 0 0; font-size: 14px;">Report Period: ${formatDate(fromDate)} to ${formatDate(toDate)}</p>
+                </div>`;
+
+                // Overall Statistics Cards
+                html += '<div class="row mb-4 g-3">';
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-calendar-day text-secondary fs-4 mb-2"></i>
+                        <h4 class="mb-1">${stats.TotalShifts || 0}</h4>
+                        <small class="text-muted">Total Shifts</small>
+                    </div>
+                </div>`;
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-road text-info fs-4 mb-2"></i>
+                        <h4 class="mb-1">${parseFloat(stats.TotalMileage || 0).toFixed(2)}</h4>
+                        <small class="text-muted">Km Driven</small>
+                    </div>
+                </div>`;
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-dollar-sign text-success fs-4 mb-2"></i>
+                        <h4 class="mb-1">$${parseFloat(stats.TotalEarnings || 0).toFixed(2)}</h4>
+                        <small class="text-muted">Gross Earnings</small>
+                    </div>
+                </div>`;
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-wallet text-warning fs-4 mb-2"></i>
+                        <h4 class="mb-1">$${parseFloat(stats.TotalDriverShare || 0).toFixed(2)}</h4>
+                        <small class="text-muted">Driver Share</small>
+                    </div>
+                </div>`;
+                html += '</div>';
+
+                // Performance Metrics
+                html += '<div class="row mb-4 g-3">';
+                html += '<div class="col-md-6">';
+                html += '<div class="border rounded-3 p-3 h-100 bg-white">';
+                html += '<h6 class="mb-3 text-secondary text-uppercase" style="font-size: 12px;">Metrics</h6>';
+                html += '<table class="table table-sm mb-0">';
+                html += `<tr><td>Avg Earnings per Shift</td><td class="text-end"><strong>$${parseFloat(stats.AvgEarningsPerShift || 0).toFixed(2)}</strong></td></tr>`;
+                html += `<tr><td>Avg Mileage per Shift</td><td class="text-end"><strong>${parseFloat(stats.AvgMileagePerShift || 0).toFixed(2)} km</strong></td></tr>`;
+                html += `<tr><td>Total Days Worked</td><td class="text-end"><strong>${stats.TotalDays || 0}</strong></td></tr>`;
+                html += `<tr><td>Total Fuel Cost</td><td class="text-end"><strong>$${parseFloat(stats.TotalFuelCost || 0).toFixed(2)}</strong></td></tr>`;
+                html += '</table></div></div>';
+
+                // Shift Type Breakdown
+                if (data.shiftTypeStats && data.shiftTypeStats.length > 0) {
+                    html += '<div class="col-md-6">';
+                    html += '<div class="border rounded-3 p-3 h-100 bg-white">';
+                    html += '<h6 class="mb-3 text-secondary text-uppercase" style="font-size: 12px;">Shift Analysis</h6>';
+                    html += '<table class="table table-sm mb-0">';
+                    data.shiftTypeStats.forEach(st => {
+                        html += `<tr><td>${st.ShiftType}</td><td class="text-end">${st.ShiftCount} shifts</td><td class="text-end"><strong>$${parseFloat(st.TotalEarnings).toFixed(2)}</strong></td></tr>`;
+                    });
+                    html += '</table></div></div>';
+                }
+                html += '</div>';
+
+                // Daily Performance Log
+                if (data.dailyPerformance && data.dailyPerformance.length > 0) {
+                    html += '<h6 class="mb-3 text-secondary text-uppercase" style="font-size: 12px;">Daily Log</h6>';
+                    html += '<div class="table-responsive" style="max-height: 400px; overflow-y: auto;"><table class="table table-sm table-bordered">';
+                    html += '<thead style="position: sticky; top: 0; background: #faf8f5;"><tr><th>Date</th><th>Shift</th><th>Vehicle</th><th>Mileage</th><th>Earnings</th><th>Fuel</th><th>Driver Share</th></tr></thead><tbody>';
+                    data.dailyPerformance.forEach(d => {
+                        html += `<tr>
+                            <td>${formatDate(d.Date)}</td>
+                            <td>${d.ShiftType}</td>
+                            <td>${d.NumberPlate}</td>
+                            <td>${parseFloat(d.Mileage || 0).toFixed(2)} km</td>
+                            <td>$${parseFloat(d.TotalEarnings || 0).toFixed(2)}</td>
+                            <td>$${parseFloat(d.FuelCost || 0).toFixed(2)}</td>
+                            <td>$${parseFloat(d.DriverShare || 0).toFixed(2)}</td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table></div>';
+                } else {
+                    html += '<p class="text-muted">No daily performance data available</p>';
+                }
+
+                content.innerHTML = html;
+            } catch (err) {
+                content.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Error: ${err.message}</div>`;
+            }
+        }
+
+        // Vehicle Performance Report
+        async function loadVehiclePerformance() {
+            const vehicleId = document.getElementById('performanceVehicleId').value;
+            const fromDate = document.getElementById('vehiclePerfFrom').value;
+            const toDate = document.getElementById('vehiclePerfTo').value;
+
+            if (!vehicleId || !fromDate || !toDate) {
+                alert('Please select vehicle and date range');
+                return;
+            }
+
+            if (new Date(fromDate) > new Date(toDate)) {
+                alert('From date must be before to date');
+                return;
+            }
+
+            const content = document.getElementById('vehiclePerformanceContent');
+            content.innerHTML = '<p class="text-muted"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+
+            try {
+                const res = await fetch(api + `/reports/vehicle-performance?vehicleId=${vehicleId}&from=${fromDate}&to=${toDate}`, { headers });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    content.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> ${data.message || 'Error loading report'}</div>`;
+                    return;
+                }
+
+                const stats = data.overallStats || {};
+                const eff = data.efficiency || {};
+                const vehicle = data.vehicle || {};
+                let html = '';
+
+                // Vehicle Info Header
+                html += `<div style="background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%); padding: 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #e8dcc8;">
+                    <h5 style="color: #3d3530; margin-bottom: 10px;"><i class="fas fa-car me-2"></i> ${vehicle.NumberPlate || 'Unknown'} ${vehicle.Model ? '(' + vehicle.Model + ')' : ''}</h5>
+                    <p style="color: #8b775e; margin: 4px 0 0 0; font-size: 14px;">Report Period: ${formatDate(fromDate)} to ${formatDate(toDate)}</p>
+                </div>`;
+
+                // Overall Statistics Cards
+                html += '<div class="row mb-4 g-3">';
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-calendar-check text-secondary fs-4 mb-2"></i>
+                        <h4 class="mb-1">${stats.TotalShifts || 0}</h4>
+                        <small class="text-muted">Total Shifts</small>
+                    </div>
+                </div>`;
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-tachometer-alt text-info fs-4 mb-2"></i>
+                        <h4 class="mb-1">${parseFloat(stats.TotalMileage || 0).toFixed(2)}</h4>
+                        <small class="text-muted">Total Km</small>
+                    </div>
+                </div>`;
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-dollar-sign text-success fs-4 mb-2"></i>
+                        <h4 class="mb-1">$${parseFloat(stats.TotalEarnings || 0).toFixed(2)}</h4>
+                        <small class="text-muted">Revenue</small>
+                    </div>
+                </div>`;
+                html += `<div class="col-md-3">
+                    <div class="p-3 bg-white border rounded-3 text-center h-100">
+                        <i class="fas fa-chart-line text-warning fs-4 mb-2"></i>
+                        <h4 class="mb-1">$${parseFloat(stats.TotalNetProfit || 0).toFixed(2)}</h4>
+                        <small class="text-muted">Net Profit</small>
+                    </div>
+                </div>`;
+                html += '</div>';
+
+                // Performance Metrics & Efficiency
+                html += '<div class="row mb-4 g-3">';
+                html += '<div class="col-md-6">';
+                html += '<div class="border rounded-3 p-3 h-100 bg-white">';
+                html += '<h6 class="mb-3 text-secondary text-uppercase" style="font-size: 12px;">Efficiency</h6>';
+                html += '<table class="table table-sm mb-0">';
+                html += `<tr><td>Earnings per KM</td><td class="text-end"><strong>$${parseFloat(eff.earningsPerKm || 0).toFixed(2)}</strong></td></tr>`;
+                html += `<tr><td>Profit per KM</td><td class="text-end"><strong>$${parseFloat(eff.profitPerKm || 0).toFixed(2)}</strong></td></tr>`;
+                html += `<tr><td>Fuel Cost per KM</td><td class="text-end"><strong>$${parseFloat(eff.fuelCostPerKm || 0).toFixed(2)}</strong></td></tr>`;
+                html += `<tr><td>Utilization Rate</td><td class="text-end"><strong>${parseFloat(eff.utilizationRate || 0).toFixed(2)}%</strong></td></tr>`;
+                html += '</table></div></div>';
+
+                html += '<div class="col-md-6">';
+                html += '<div class="border rounded-3 p-3 h-100 bg-white">';
+                html += '<h6 class="mb-3 text-secondary text-uppercase" style="font-size: 12px;">Usage Stats</h6>';
+                html += '<table class="table table-sm mb-0">';
+                html += `<tr><td>Total Drivers Used</td><td class="text-end"><strong>${stats.TotalDrivers || 0}</strong></td></tr>`;
+                html += `<tr><td>Total Days Active</td><td class="text-end"><strong>${stats.TotalDays || 0}</strong></td></tr>`;
+                html += `<tr><td>Avg Earnings/Shift</td><td class="text-end"><strong>$${parseFloat(stats.AvgEarningsPerShift || 0).toFixed(2)}</strong></td></tr>`;
+                html += `<tr><td>Odometer Range</td><td class="text-end"><strong>${stats.InitialReading || 0} - ${stats.FinalReading || 0} km</strong></td></tr>`;
+                html += '</table></div></div>';
+                html += '</div>';
+
+                // Daily Performance Log
+                if (data.dailyPerformance && data.dailyPerformance.length > 0) {
+                    html += '<h6 class="mb-3 text-secondary text-uppercase" style="font-size: 12px;">Daily Log</h6>';
+                    html += '<div class="table-responsive" style="max-height: 400px; overflow-y: auto;"><table class="table table-sm table-bordered">';
+                    html += '<thead style="position: sticky; top: 0; background: #faf8f5;"><tr><th>Date</th><th>Shift</th><th>Driver</th><th>Start</th><th>End</th><th>Mileage</th><th>Earnings</th><th>Profit</th></tr></thead><tbody>';
+                    data.dailyPerformance.forEach(d => {
+                        html += `<tr>
+                            <td>${formatDate(d.Date)}</td>
+                            <td>${d.ShiftType}</td>
+                            <td>${d.DriverName}</td>
+                            <td>${d.StartReading}</td>
+                            <td>${d.EndReading}</td>
+                            <td>${parseFloat(d.Mileage || 0).toFixed(2)} km</td>
+                            <td>$${parseFloat(d.TotalEarnings || 0).toFixed(2)}</td>
+                            <td>$${parseFloat(d.NetProfit || 0).toFixed(2)}</td>
+                        </tr>`;
+                    });
+                    html += '</tbody></table></div>';
+                }
+
+                content.innerHTML = html;
+            } catch (err) {
+                content.innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Error: ${err.message}</div>`;
+            }
+        }
+
+        loadDropdowns();
+    </script>
+</body>
+
+</html>

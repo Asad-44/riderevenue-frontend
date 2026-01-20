@@ -1,0 +1,714 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drivers - RideRevenue Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f0e8;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e8dcc8;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(139, 119, 94, 0.08);
+            margin-bottom: 32px;
+        }
+
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: 600;
+            color: #3d3530 !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand i {
+            font-size: 24px;
+            color: #c4a880;
+        }
+
+        .btn-back {
+            background: white;
+            color: #a89073;
+            border: 1.5px solid #e8dcc8;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #faf8f5;
+            border-color: #c4a880;
+            color: #8b775e;
+            transform: translateX(-4px);
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #3d3530;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            color: #c4a880;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 16px rgba(139, 119, 94, 0.08);
+            border: 1px solid #e8dcc8;
+            margin-bottom: 24px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #3d3530;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-section-title i {
+            color: #c4a880;
+            font-size: 18px;
+        }
+
+        .form-label {
+            color: #5d4e42;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-control,
+        .form-select {
+            border: 1.5px solid #e8dcc8;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #faf8f5;
+            color: #3d3530;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #c4a880;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(196, 168, 128, 0.1);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #b5a08f;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c4a880 0%, #a89073 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 11px 24px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(164, 144, 115, 0.25);
+            font-size: 14px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(164, 144, 115, 0.35);
+            background: linear-gradient(135deg, #a89073 0%, #c4a880 100%);
+        }
+
+        .btn-outline-secondary {
+            background: white;
+            color: #8b775e;
+            border: 1.5px solid #e8dcc8;
+            border-radius: 10px;
+            padding: 11px 24px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #faf8f5;
+            border-color: #c4a880;
+            color: #5d4e42;
+        }
+
+        .btn-warning {
+            background: #ffa726;
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-warning:hover {
+            background: #fb8c00;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef5350;
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background: #e53935;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 12px 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(139, 119, 94, 0.08);
+            border: 1px solid #e8dcc8;
+        }
+
+        .table {
+            color: #3d3530;
+            margin: 0;
+        }
+
+        .table thead {
+            background: #faf8f5;
+            color: #5d4e42;
+        }
+
+        .table thead th {
+            border: none;
+            padding: 14px 16px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e8dcc8;
+        }
+
+        .table tbody td {
+            padding: 14px 16px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0ebe3;
+            font-size: 14px;
+        }
+
+        .table tbody tr:hover {
+            background: #faf8f5;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .badge-salary {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-share {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: #8b775e;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: #e8dcc8;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h4 {
+            font-size: 18px;
+            color: #5d4e42;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .content-card {
+                padding: 24px 20px;
+            }
+
+            .table-container {
+                padding: 16px;
+                overflow-x: auto;
+            }
+
+            .table {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-car"></i>
+                RideRevenue Tracker
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <a href="dashboard.html" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <h3 class="page-title">
+            <i class="fas fa-users"></i>
+            Drivers Management
+        </h3>
+
+        <div class="content-card">
+            <div class="form-section-title">
+                <i class="fas fa-plus-circle"></i>
+                <span id="formTitle">Add New Driver</span>
+            </div>
+
+            <form id="addForm">
+                <!-- Row 1: Identity & Contact -->
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Full Name</label>
+                        <input id="name" name="name" class="form-control" placeholder="Enter driver name" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">CNIC (Identity)</label>
+                        <input id="cnic" name="cnic" class="form-control" placeholder="e.g. 00000-0000000-0"
+                            maxlength="15" required>
+                        <div class="form-text" style="font-size: 11px; color: #8b775e;">Format: XXXXX-XXXXXXX-X</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Phone Number</label>
+                        <input id="phone" name="phone" class="form-control" placeholder="03XX-XXXXXXX" maxlength="12"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Row 2: License & Type -->
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                        <label class="form-label">License Number</label>
+                        <input id="licenseNumber" name="licenseNumber" class="form-control"
+                            placeholder="Enter license #" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Compensation Type</label>
+                        <select id="compensationType" name="compensationType" class="form-select" required>
+                            <option value="">Select type</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Share">Share</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                    <div class="col-md-4" id="salaryField" style="display:none;">
+                        <label class="form-label">Monthly Salary ($)</label>
+                        <input id="monthlySalary" name="monthlySalary" class="form-control" placeholder="Enter amount"
+                            type="number" step="0.01">
+                    </div>
+                    <div class="col-md-4" id="driverPercentField" style="display:none;">
+                        <label class="form-label">Driver Share (%)</label>
+                        <input id="driverPercent" name="driverPercent" class="form-control" placeholder="e.g., 60"
+                            type="number" step="0.1" min="0" max="100">
+                    </div>
+                    <div class="col-md-4" id="ownerPercentField" style="display:none;">
+                        <label class="form-label">Owner Share (%)</label>
+                        <input id="ownerPercent" name="ownerPercent" class="form-control" placeholder="Auto-calculated"
+                            type="number" step="0.1" readonly>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-plus"></i> Add Driver
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary ms-2" id="cancelBtn"
+                            style="display:none;" onclick="cancelEdit()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="msg"></div>
+
+        <div class="table-container">
+            <div id="list"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        if (!localStorage.token) location = 'login.html';
+
+        const api = 'https://riderevenue-backend.onrender.com/api';
+        const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.token };
+        let editingId = null;
+
+        // Show/Hide fields based on compensation type
+        document.getElementById('compensationType').addEventListener('change', (e) => {
+            const type = e.target.value;
+            const salaryField = document.getElementById('salaryField');
+            const driverPercentField = document.getElementById('driverPercentField');
+            const ownerPercentField = document.getElementById('ownerPercentField');
+            const monthlySalary = document.getElementById('monthlySalary');
+            const driverPercent = document.getElementById('driverPercent');
+
+            if (type === 'Salary') {
+                salaryField.style.display = 'block';
+                driverPercentField.style.display = 'none';
+                ownerPercentField.style.display = 'none';
+                monthlySalary.required = true;
+                driverPercent.required = false;
+            } else if (type === 'Share') {
+                salaryField.style.display = 'none';
+                driverPercentField.style.display = 'block';
+                ownerPercentField.style.display = 'block';
+                monthlySalary.required = false;
+                driverPercent.required = true;
+            } else {
+                salaryField.style.display = 'none';
+                driverPercentField.style.display = 'none';
+                ownerPercentField.style.display = 'none';
+            }
+        });
+
+        // Auto-calculate owner share
+        document.getElementById('driverPercent').addEventListener('input', (e) => {
+            const driverPercent = parseFloat(e.target.value) || 0;
+            document.getElementById('ownerPercent').value = (100 - driverPercent).toFixed(1);
+        });
+
+        document.getElementById('addForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const f = e.target;
+            const cnicRaw = f.cnic.value.replace(/\D/g, ''); // Remove dashes to count digits
+
+            if (cnicRaw.length !== 13) {
+                document.getElementById('msg').innerHTML =
+                    '<div class="alert alert-danger mb-3"><i class="fas fa-exclamation-circle"></i> Invalid CNIC. Must be exactly 13 digits.</div>';
+                return; // Stop execution
+            }
+            const phoneVal = f.phone.value;
+            // Regex: Starts with 03, followed by 2 digits, a dash, then 7 digits
+            if (phoneVal && !/^03\d{2}-\d{7}$/.test(phoneVal)) {
+                document.getElementById('msg').innerHTML =
+                    '<div class="alert alert-danger mb-3"><i class="fas fa-exclamation-circle"></i> Invalid Phone. Must be format 03XX-XXXXXXX.</div>';
+                return;
+            }
+            const compensationType = f.compensationType.value;
+
+            const body = {
+                name: f.name.value,
+                cnic: f.cnic.value,
+                phone: f.phone.value || null,
+                licenseNumber: f.licenseNumber.value,
+                compensationType: compensationType,
+                monthlySalary: compensationType === 'Salary' ? (f.monthlySalary.value ? parseFloat(f.monthlySalary.value) : null) : null,
+                driverPercent: compensationType === 'Share' ? (f.driverPercent.value ? parseFloat(f.driverPercent.value) : null) : null,
+                ownerPercent: compensationType === 'Share' ? (f.driverPercent.value ? (100 - parseFloat(f.driverPercent.value)) : null) : null
+            };
+
+            try {
+                const method = editingId ? 'PUT' : 'POST';
+                const url = editingId ? api + '/' + editingId : api;
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: headers,
+                    body: JSON.stringify(body)
+                });
+                const json = await res.json();
+
+                if (res.ok) {
+                    load();
+                    f.reset();
+                    editingId = null;
+                    document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> Add Driver';
+                    document.getElementById('formTitle').textContent = 'Add New Driver';
+                    document.getElementById('cancelBtn').style.display = 'none';
+                    document.getElementById('msg').innerHTML = '<div class="alert alert-success mb-3"><i class="fas fa-check-circle"></i> Driver saved successfully!</div>';
+                    setTimeout(() => document.getElementById('msg').innerHTML = '', 3000);
+
+                    // Hide conditional fields
+                    document.getElementById('salaryField').style.display = 'none';
+                    document.getElementById('driverPercentField').style.display = 'none';
+                    document.getElementById('ownerPercentField').style.display = 'none';
+                } else {
+                    document.getElementById('msg').innerHTML = '<div class="alert alert-danger mb-3"><i class="fas fa-times-circle"></i> ' + (json.message || JSON.stringify(json)) + '</div>';
+                }
+            } catch (err) {
+                document.getElementById('msg').innerHTML = '<div class="alert alert-danger mb-3"><i class="fas fa-exclamation-triangle"></i> Error: ' + err.message + '</div>';
+                console.error(err);
+            }
+        });
+
+        async function load() {
+            try {
+                const res = await fetch(api, { headers });
+                const data = await res.json();
+
+                if (data.length === 0) {
+                    document.getElementById('list').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <h4>No Drivers Yet</h4>
+                            <p>Add your first driver using the form above</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '<table class="table"><thead><tr><th>Name</th><th>CNIC</th><th>Phone</th><th>License #</th><th>Type</th><th>Details</th><th style="width: 180px;">Actions</th></tr></thead><tbody>';
+
+                data.forEach(d => {
+                    let details = '';
+                    let badge = '';
+                    if (d.CompensationType === 'Salary') {
+                        details = '$' + parseFloat(d.MonthlySalary || 0).toFixed(2);
+                        badge = '<span class="badge badge-salary">Salary</span>';
+                    } else {
+                        details = d.DriverPercent + '% / ' + d.OwnerPercent + '%';
+                        badge = '<span class="badge badge-share">Share</span>';
+                    }
+                    html += '<tr>';
+                    html += '<td><strong>' + d.Name + '</strong></td>';
+                    html += '<td>' + (d.CNIC || '<span style="color: #b5a08f;">-</span>') + '</td>';
+                    html += '<td>' + (d.Phone || '<span style="color: #b5a08f;">-</span>') + '</td>';
+                    html += '<td>' + (d.LicenseNumber || '<span style="color: #b5a08f;">-</span>') + '</td>';
+                    html += '<td>' + badge + '</td>';
+                    html += '<td>' + details + '</td>';
+                    html += '<td>';
+                    html += '<button class="btn btn-sm btn-warning me-2" onclick="editDriver(' + d.DriverID + ')"><i class="fas fa-edit"></i> Edit</button>';
+                    html += '<button class="btn btn-sm btn-danger" onclick="deleteDriver(' + d.DriverID + ')"><i class="fas fa-trash"></i> Delete</button>';
+                    html += '</td>';
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
+                document.getElementById('list').innerHTML = html;
+            } catch (err) {
+                document.getElementById('list').innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Error loading drivers: ' + err.message + '</div>';
+                console.error(err);
+            }
+        }
+
+        async function editDriver(id) {
+            try {
+                const res = await fetch(api + '/' + id, { headers });
+                const driver = await res.json();
+
+                editingId = id;
+                document.getElementById('name').value = driver.Name;
+                document.getElementById('cnic').value = driver.CNIC || '';
+                document.getElementById('phone').value = driver.Phone || '';
+                document.getElementById('licenseNumber').value = driver.LicenseNumber || '';
+                document.getElementById('compensationType').value = driver.CompensationType;
+
+                // Trigger the change event to show correct fields
+                const event = new Event('change', { bubbles: true });
+                document.getElementById('compensationType').dispatchEvent(event);
+
+                if (driver.CompensationType === 'Salary') {
+                    document.getElementById('monthlySalary').value = driver.MonthlySalary || '';
+                } else {
+                    document.getElementById('driverPercent').value = driver.DriverPercent || '';
+                    document.getElementById('ownerPercent').value = driver.OwnerPercent || '';
+                }
+
+                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Driver';
+                document.getElementById('formTitle').textContent = 'Edit Driver';
+                document.getElementById('cancelBtn').style.display = 'inline-block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (err) {
+                alert('Error loading driver: ' + err.message);
+                console.error(err);
+            }
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            document.getElementById('addForm').reset();
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-plus"></i> Add Driver';
+            document.getElementById('formTitle').textContent = 'Add New Driver';
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('salaryField').style.display = 'none';
+            document.getElementById('driverPercentField').style.display = 'none';
+            document.getElementById('ownerPercentField').style.display = 'none';
+        }
+
+        async function deleteDriver(id) {
+            if (!confirm('Are you sure you want to delete this driver?')) return;
+
+            try {
+                const res = await fetch(api + '/' + id, {
+                    method: 'DELETE',
+                    headers: headers
+                });
+                const json = await res.json();
+
+                if (res.ok) {
+                    load();
+                    document.getElementById('msg').innerHTML = '<div class="alert alert-success mb-3"><i class="fas fa-check-circle"></i> Driver deleted successfully!</div>';
+                    setTimeout(() => document.getElementById('msg').innerHTML = '', 3000);
+                } else {
+                    document.getElementById('msg').innerHTML = '<div class="alert alert-danger mb-3"><i class="fas fa-times-circle"></i> ' + (json.message || 'Delete failed') + '</div>';
+                }
+            } catch (err) {
+                document.getElementById('msg').innerHTML = '<div class="alert alert-danger mb-3"><i class="fas fa-exclamation-triangle"></i> Error: ' + err.message + '</div>';
+                console.error(err);
+            }
+        }
+
+        load();
+        // --- CNIC Auto-Formatting Script ---
+        const cnicInput = document.getElementById('cnic');
+
+        cnicInput.addEventListener('input', function (e) {
+            // 1. Remove any character that is not a number
+            let value = e.target.value.replace(/\D/g, '');
+
+            // 2. Limit to 13 digits (raw numbers)
+            if (value.length > 13) {
+                value = value.substring(0, 13);
+            }
+
+            // 3. Add dashes logic
+            if (value.length > 5 && value.length <= 12) {
+                // Add dash after 5th digit: 12345-1...
+                value = value.slice(0, 5) + '-' + value.slice(5);
+            } else if (value.length > 12) {
+                // Add dash after 12th digit (5+7): 12345-1234567-1
+                value = value.slice(0, 5) + '-' + value.slice(5, 12) + '-' + value.slice(12);
+            }
+
+            // 4. Update the input field
+            e.target.value = value;
+        });
+        // --- Phone Auto-Formatting Script ---
+        const phoneInput = document.getElementById('phone');
+
+        phoneInput.addEventListener('input', function (e) {
+            // 1. Remove non-numbers
+            let value = e.target.value.replace(/\D/g, '');
+
+            // 2. Limit to 11 digits (03001234567)
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+
+            // 3. Add dash after 4th digit
+            if (value.length > 4) {
+                value = value.slice(0, 4) + '-' + value.slice(4);
+            }
+
+            // 4. Update input
+            e.target.value = value;
+        });
+    </script>
+</body>
+
+</html>

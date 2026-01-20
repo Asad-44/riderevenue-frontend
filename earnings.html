@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Earnings</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"></head>
+<body class="bg-light">
+<div class="container py-4">
+  <a href="dashboard.html" class="btn btn-link">← Back</a>
+  <h3>Earnings</h3>
+  <form id="fe" class="mb-3">
+    <div class="row g-2">
+      <div class="col-md-3"><select id="vSel" name="vehicleId" class="form-select" required></select></div>
+      <div class="col-md-3"><select id="dSel" name="driverId" class="form-select" required></select></div>
+      <div class="col-md-2"><input name="date" type="date" class="form-control" required></div>
+      <div class="col-md-2"><input name="totalEarnings" class="form-control" placeholder="Total Earnings" required></div>
+      <div class="col-md-2"><input name="fuelCost" class="form-control" placeholder="Fuel Cost"></div>
+      <div class="col-md-12 mt-2"><button class="btn btn-primary">Save Earnings</button></div>
+    </div>
+  </form>
+  <div id="list"></div>
+</div>
+<script>
+if(!localStorage.token) location='login.html';
+const headers={ 'Content-Type':'application/json','Authorization':'Bearer '+localStorage.token };
+async function loadSel(){ const v=await (await fetch('https://riderevenue-backend.onrender.com/api/vehicles',{headers})).json(); document.getElementById('vSel').innerHTML = v.map(x=>`<option value="${x.VehicleID}">${x.NumberPlate}</option>`).join(''); const d=await (await fetch('https://riderevenue-backend.onrender.com/api/drivers',{headers})).json(); document.getElementById('dSel').innerHTML = d.map(x=>`<option value="${x.DriverID}">${x.Name}</option>`).join(''); }
+document.getElementById('fe').addEventListener('submit', async e=>{ e.preventDefault(); const f=e.target; const body={ vehicleId: parseInt(f.vehicleId.value), driverId: parseInt(f.driverId.value), date: f.date.value, totalEarnings: parseFloat(f.totalEarnings.value), fuelCost: parseFloat(f.fuelCost.value||0) }; const res=await fetch('https://riderevenue-backend.onrender.com/api/earnings',{method:'POST',headers,body:JSON.stringify(body)}); const json=await res.json(); if(res.ok){ alert('Saved'); loadList(); f.reset(); } else alert(json.message||JSON.stringify(json)); });
+async function loadList(){ const data=await (await fetch('https://riderevenue-backend.onrender.com/api/earnings',{headers})).json(); document.getElementById('list').innerHTML = `<table class="table"><thead><tr><th>Date</th><th>Driver</th><th>Vehicle</th><th>Total</th><th>DriverShare</th><th>OwnerShare</th><th>NetProfit</th></tr></thead><tbody>${data.map(e=>`<tr><td>${e.Date}</td><td>${e.DriverName}</td><td>${e.NumberPlate}</td><td>${e.TotalEarnings}</td><td>${e.DriverShare}</td><td>${e.OwnerShare}</td><td>${e.NetProfit}</td></tr>`).join('')}</tbody></table>`; }
+loadSel(); loadList();
+</script>
+</body>
+</html>
