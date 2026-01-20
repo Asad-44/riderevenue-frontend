@@ -444,7 +444,7 @@
     <script>
         if (!localStorage.token) location = 'login.html';
 
-        const api = 'https://riderevenue-backend.onrender.com/api';
+        const api = 'https://riderevenue-backend.onrender.com/api/drivers';
         const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.token };
         let editingId = null;
 
