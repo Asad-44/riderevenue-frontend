@@ -18,6 +18,7 @@
             min-height: 100vh;
             background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -174,7 +175,7 @@
             margin-right: auto;
         }
 
-        /* Action buttons - Now positioned prominently */
+        /* Action buttons */
         .action-buttons {
             display: flex;
             gap: 14px;
@@ -380,6 +381,34 @@
             line-height: 1.6;
         }
 
+        .credits {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #e8dcc8;
+            font-size: 13px;
+            color: #8b775e;
+        }
+
+        .credits a {
+            color: #3d3530;
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .credits a:hover {
+            color: #c4a880;
+        }
+
+        .credits a i {
+            color: #0077b5;
+            font-size: 14px;
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             .landing-card {
@@ -530,6 +559,13 @@
             <p class="footer-text">
                 Streamline your ride-sharing business operations with powerful tools
             </p>
+
+            <div class="credits">
+                © 2026 RideRevenue • Developed by
+                <a href="https://www.linkedin.com/in/muhammad-asad-shafiq" target="_blank" rel="noopener noreferrer">
+                    Muhammad Asad Shafiq <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
         </div>
     </div>
 
