@@ -356,10 +356,34 @@
         }
 
         /* Tables */
+        /* Update this existing class */
         .table-responsive {
             border-radius: 12px;
             border: 1px solid var(--border);
-            overflow: hidden;
+
+            /* SCROLLING FIXES */
+            overflow-x: auto;
+            /* Horizontal Scroll */
+            overflow-y: auto;
+            /* Vertical Scroll */
+            max-height: 60vh;
+            /* Limits height to 60% of screen, forces scroll if longer */
+            -webkit-overflow-scrolling: touch;
+            /* Smooth scrolling on iOS */
+            white-space: nowrap;
+            /* Prevents text wrapping, forcing horizontal scroll if needed */
+        }
+
+        /* ADD THIS: Keeps the table header fixed at top while scrolling down */
+        .table thead th {
+            position: sticky;
+            top: 0;
+            background: #faf8f5;
+            /* Must match your theme background */
+            z-index: 2;
+            /* Ensures header stays on top of data */
+            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+            /* Optional: slight shadow for depth */
         }
 
         .table {
