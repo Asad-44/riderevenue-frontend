@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
+
 <head>
+    <!-- Website Logo / Favicon -->
+    <link rel="icon" type="image/png" href="https://img.icons8.com/ios-filled/50/c4a880/car.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RideRevenue Tracker - Fleet & Earnings Manager</title>
@@ -52,11 +55,14 @@
         }
 
         @keyframes float {
-            0%, 100% { 
+
+            0%,
+            100% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
             }
-            50% { 
+
+            50% {
                 transform: translateY(-40px) scale(1.08);
                 opacity: 0.8;
             }
@@ -94,8 +100,13 @@
         }
 
         @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
         }
 
         @keyframes slideUp {
@@ -103,6 +114,7 @@
                 opacity: 0;
                 transform: translateY(40px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -139,13 +151,27 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         @keyframes glow {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 0.3; }
+
+            0%,
+            100% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
         .logo-icon i {
@@ -485,6 +511,7 @@
                 opacity: 0;
                 transform: scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -495,11 +522,20 @@
             animation: fadeInScale 0.5s ease-out backwards;
         }
 
-        .feature:nth-child(1) { animation-delay: 0.1s; }
-        .feature:nth-child(2) { animation-delay: 0.2s; }
-        .feature:nth-child(3) { animation-delay: 0.3s; }
+        .feature:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .feature:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .feature:nth-child(3) {
+            animation-delay: 0.3s;
+        }
     </style>
 </head>
+
 <body>
     <div class="landing-container">
         <div class="landing-card">
@@ -508,7 +544,8 @@
                     <i class="fas fa-car"></i>
                 </div>
                 <h1>RideRevenue Tracker</h1>
-                <p class="subtitle">Professional fleet & earnings management system for modern ride-sharing businesses</p>
+                <p class="subtitle">Professional fleet & earnings management system for modern ride-sharing businesses
+                </p>
             </div>
 
             <!-- Action buttons prominently placed -->
@@ -576,4 +613,5 @@
         }
     </script>
 </body>
+
 </html>
