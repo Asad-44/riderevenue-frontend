@@ -380,13 +380,15 @@
             }
         });
 
-        // Original register logic - PRESERVED
+        // --- UPDATED REGISTER LOGIC FOR EMAIL VERIFICATION ---
+        const api = "https://riderevenue-backend.onrender.com/api/auth";
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const msgDiv = document.getElementById('msg');
             const registerBtn = document.getElementById('registerBtn');
 
-            msgDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Processing...</div>';
+            msgDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Sending OTP...</div>';
             registerBtn.disabled = true;
 
             const body = {
@@ -397,7 +399,7 @@
             };
 
             try {
-                const res = await fetch("https://riderevenue-backend.onrender.com/api/auth/register", {
+                const res = await fetch(`${api}/register`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(body)
@@ -406,9 +408,11 @@
                 const json = await res.json();
 
                 if (res.ok) {
-                    msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> Registration successful! Redirecting...</div>';
-                    localStorage.token = json.token;
-                    setTimeout(() => { location.href = 'dashboard.html'; }, 1500);
+                    msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> OTP Sent! Redirecting...</div>';
+                    // Do NOT log in yet. Redirect to Verify page.
+                    setTimeout(() => {
+                        window.location.href = `verify.html?email=${encodeURIComponent(body.email)}`;
+                    }, 1000);
                 } else {
                     msgDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> ' + (json.message || JSON.stringify(json)) + '</div>';
                     registerBtn.disabled = false;
@@ -419,11 +423,6 @@
                 registerBtn.disabled = false;
             }
         });
-
-        // Check if already logged in
-        // New Code
-        alert('Signup Successful! Please check your email for the OTP.');
-        location.href = `verify.html?email=${encodeURIComponent(body.email)}`;
     </script>
 </body>
 
