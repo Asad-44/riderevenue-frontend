@@ -2,12 +2,17 @@
 <html>
 
 <head>
-    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - RideRevenue Tracker</title>
+    
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Intl-Tel-Input CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+
     <style>
         * {
             margin: 0;
@@ -123,8 +128,20 @@
             box-shadow: 0 0 0 3px rgba(196, 168, 128, 0.1);
         }
 
-        .input-wrapper:focus-within .input-icon {
-            color: #c4a880;
+        /* FIX: Ensure intl-tel-input container takes full width */
+        .iti {
+            width: 100%;
+            display: block;
+        }
+
+        /* FIX: Adjust padding for phone input so text doesn't overlap the flag */
+        #phone {
+            padding-left: 95px !important; 
+        }
+
+        /* Hide the default input icon for phone since flag is there */
+        .phone-group .input-icon {
+            display: none;
         }
 
         .password-toggle {
@@ -202,63 +219,20 @@
             font-size: 14px;
         }
 
-        .alert-info {
-            background: #f0ebe3;
-            color: #5d4e42;
-        }
+        .alert-info { background: #f0ebe3; color: #5d4e42; }
+        .alert-success { background: #e8f5e9; color: #2e7d32; }
+        .alert-danger { background: #ffebee; color: #c62828; }
 
-        .alert-success {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .alert-danger {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .password-strength {
-            margin-top: 8px;
-            font-size: 12px;
-        }
-
-        .strength-bar {
-            height: 4px;
-            border-radius: 2px;
-            background: #e8dcc8;
-            margin-top: 6px;
-            overflow: hidden;
-        }
-
-        .strength-bar-fill {
-            height: 100%;
-            transition: all 0.3s ease;
-            width: 0%;
-        }
-
-        .strength-weak {
-            background: #ef5350;
-            width: 33%;
-        }
-
-        .strength-medium {
-            background: #ffa726;
-            width: 66%;
-        }
-
-        .strength-strong {
-            background: #66bb6a;
-            width: 100%;
-        }
+        .password-strength { margin-top: 8px; font-size: 12px; }
+        .strength-bar { height: 4px; border-radius: 2px; background: #e8dcc8; margin-top: 6px; overflow: hidden; }
+        .strength-bar-fill { height: 100%; transition: all 0.3s ease; width: 0%; }
+        .strength-weak { background: #ef5350; width: 33%; }
+        .strength-medium { background: #ffa726; width: 66%; }
+        .strength-strong { background: #66bb6a; width: 100%; }
 
         @media (max-width: 576px) {
-            .register-card {
-                padding: 40px 28px;
-            }
-
-            .logo-section h2 {
-                font-size: 23px;
-            }
+            .register-card { padding: 40px 28px; }
+            .logo-section h2 { font-size: 23px; }
         }
     </style>
 </head>
@@ -281,8 +255,7 @@
                     <label class="form-label" for="name">Full Name</label>
                     <div class="input-wrapper">
                         <i class="fas fa-user input-icon"></i>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name"
-                            required autocomplete="name">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required autocomplete="name">
                     </div>
                 </div>
 
@@ -290,26 +263,21 @@
                     <label class="form-label" for="email">Email Address</label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email"
-                            required autocomplete="email">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required autocomplete="email">
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group phone-group">
                     <label class="form-label" for="phone">Phone Number</label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-phone input-icon"></i>
-                        <input type="tel" class="form-control" id="phone" name="phone"
-                            placeholder="Enter your phone number" autocomplete="tel">
-                    </div>
+                    <!-- Input wrapper removed for phone to let Intl-Tel-Input handle styling -->
+                    <input type="tel" class="form-control" id="phone" name="phone" required autocomplete="tel">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock input-icon"></i>
-                        <input type="password" class="form-control" id="password" name="password"
-                            placeholder="Create a strong password" required autocomplete="new-password">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Create a strong password" required autocomplete="new-password">
                         <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                     </div>
                     <div class="password-strength" id="passwordStrength" style="display: none;">
@@ -331,8 +299,26 @@
         </div>
     </div>
 
+    <!-- Intl Tel Input Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     <script>
-        // Password toggle functionality
+        // 1. Initialize International Phone Input
+        const phoneInput = document.querySelector("#phone");
+        const iti = window.intlTelInput(phoneInput, {
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch("https://ipapi.co/json")
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("pk"));
+            },
+            preferredCountries: ['pk', 'us', 'gb', 'ae'],
+            separateDialCode: true,
+            autoPlaceholder: "aggressive"
+        });
+
+        // 2. Password Toggle
         const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('password');
 
@@ -343,7 +329,7 @@
             this.classList.toggle('fa-eye-slash');
         });
 
-        // Password strength indicator
+        // 3. Password Strength
         passwordInput.addEventListener('input', function () {
             const password = this.value;
             const strengthDiv = document.getElementById('passwordStrength');
@@ -357,14 +343,12 @@
 
             strengthDiv.style.display = 'block';
 
-            // Calculate strength
             let strength = 0;
             if (password.length >= 8) strength++;
             if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
             if (password.match(/[0-9]/)) strength++;
             if (password.match(/[^a-zA-Z0-9]/)) strength++;
 
-            // Update UI
             strengthBar.className = 'strength-bar-fill';
             if (strength <= 2) {
                 strengthBar.classList.add('strength-weak');
@@ -381,7 +365,7 @@
             }
         });
 
-        // --- UPDATED REGISTER LOGIC FOR EMAIL VERIFICATION ---
+        // 4. Registration Logic (FIXED PHONE HANDLING)
         const api = "https://riderevenue-backend.onrender.com/api/auth";
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
@@ -389,13 +373,20 @@
             const msgDiv = document.getElementById('msg');
             const registerBtn = document.getElementById('registerBtn');
 
+            // Phone Validation
+            if (!iti.isValidNumber()) {
+                msgDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> Please enter a valid phone number.</div>';
+                return;
+            }
+
             msgDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Sending OTP...</div>';
             registerBtn.disabled = true;
 
             const body = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
+                // IMPORTANT: Use iti.getNumber() to get the full international number (e.g. +92300...)
+                phone: iti.getNumber(), 
                 password: document.getElementById('password').value
             };
 
@@ -410,7 +401,6 @@
 
                 if (res.ok) {
                     msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> OTP Sent! Redirecting...</div>';
-                    // Do NOT log in yet. Redirect to Verify page.
                     setTimeout(() => {
                         window.location.href = `verify.html?email=${encodeURIComponent(body.email)}`;
                     }, 1000);
