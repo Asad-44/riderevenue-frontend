@@ -409,7 +409,7 @@
                 const json = await res.json();
 
                 if (res.ok) {
-                    msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> OTP Sent! Redirecting...</div>';
+                    msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> OTP Sent!(Also check spam) Redirecting...</div>';
                     setTimeout(() => {
                         window.location.href = `verify.html?email=${encodeURIComponent(body.email)}`;
                     }, 1000);
