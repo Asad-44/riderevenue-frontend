@@ -886,30 +886,37 @@
         }
 
         // Handle daily log form submission
+        // Global flag to prevent double submissions
+        let isSubmittingLog = false;
+
         document.getElementById('dailyLogForm').addEventListener('submit', async e => {
             e.preventDefault();
+            e.stopPropagation(); // Stop event bubbling
+            e.stopImmediatePropagation(); // Stop other duplicate listeners if any
+
+            // 1. Strict Check: If already running, STOP immediately
+            if (isSubmittingLog) return;
+
             const f = e.target;
             const msgDiv = document.getElementById('msgDiv');
-
-            // 1. Get the submit button to disable it
             const submitBtn = f.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
+            const originalText = submitBtn.innerHTML;
 
+            // 2. Validate Input
             const totalMileage = parseFloat(f.totalMileage.value);
-
             if (totalMileage <= 0) {
                 msgDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-times-circle"></i> Total mileage must be greater than 0</div>';
                 return;
             }
 
-            // 2. Disable button immediately to prevent double submission
+            // 3. Lock the process
+            isSubmittingLog = true;
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
             msgDiv.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Processing...</div>';
 
             try {
-                // Create shift first
+                // --- API CALL 1: SHIFTS ---
                 const shiftRes = await fetch(api + '/shifts', {
                     method: 'POST',
                     headers: headers,
@@ -924,7 +931,7 @@
                 const shiftJson = await shiftRes.json();
                 if (!shiftRes.ok) throw new Error(shiftJson.message || 'Shift creation failed');
 
-                // Then create mileage
+                // --- API CALL 2: MILEAGE ---
                 const mileageRes = await fetch(api + '/mileage', {
                     method: 'POST',
                     headers: headers,
@@ -940,7 +947,7 @@
                 const mileageJson = await mileageRes.json();
                 if (!mileageRes.ok) throw new Error(mileageJson.message || 'Mileage creation failed');
 
-                // Finally create earnings
+                // --- API CALL 3: EARNINGS ---
                 const earningsRes = await fetch(api + '/earnings', {
                     method: 'POST',
                     headers: headers,
@@ -957,12 +964,13 @@
                 const earningsJson = await earningsRes.json();
                 if (!earningsRes.ok) throw new Error(earningsJson.message || 'Earnings creation failed');
 
+                // --- SUCCESS ---
                 msgDiv.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> Daily log saved successfully!</div>';
                 f.reset();
 
                 setTimeout(() => {
                     const modal = bootstrap.Modal.getInstance(document.getElementById('dailyLogModal'));
-                    modal.hide();
+                    if (modal) modal.hide();
                     msgDiv.innerHTML = '';
                 }, 1500);
 
@@ -970,9 +978,10 @@
                 msgDiv.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> Error: ' + err.message + '</div>';
                 console.error('Error:', err);
             } finally {
-                // 3. Re-enable button regardless of success or error
+                // 4. Unlock the process (Always runs)
+                isSubmittingLog = false;
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+                submitBtn.innerHTML = originalText;
             }
         });
 
